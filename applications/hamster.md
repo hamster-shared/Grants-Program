@@ -220,8 +220,61 @@ The following is a list of the features that have been implemented:
 | 0c. | Testing Guide | Core functions will be fully covered by unit tests to ensure functionality and robustness. In the guide, we will describe how to run these tests. |
 | 0d. | Article | We will write an article or tutorial that explains the work done as part of the grant. |
 | 1. | Hamster Client | We will create a desktop client that will have **Market**,**My order** and **My resource** module. |
-| 2. | Hamster Provider | We will create a a resource provider server that will have **Initialize configuration**,**Resource details**,**Account information** and **Configuration information** module. |
+``` mohaijiang
+Q: 您能否列出您将用于每个可交付成果的技术堆栈？ “桌面客户端”、“资源提供服务器”和“Web 应用程序”都非常模糊。
+
+A: 
+我们将会基于[wails](https://wails.io/)提供一个面向桌面（windows,macos)的app程序，来实现
+1: 市场的查询与购买的资源的管理，
+2: 客户端与计算资源提供端的点对点通行。
+3: 查询历史订单
+4： 违约的订单的部分费用退回
+
+We will provide a desktop (windows, macos) app based on [wails](https://wails.io/) to achieve
+1: Market inquiry and management of purchased resources,
+2: The point-to-point communication between the client and the computing resource provider.
+3: Query historical orders
+4: Partial fee refund for defaulted orders
+
+市场： 交易市场，算力提供者将闲置算力提交到市场上，并配置价格。 客户端可以选择自己需要的配置和价格的资源进行购买，形成交易契约
+我的订单： 所有我购买的资源订单列表和明细
+我的资源： 当前生效的订单对应的资源列表，客户端app 可以通过资源列表建立与远程资源的连接
+
+Market: A trading market where computing power providers submit idle computing power to the market and configure prices. The client can choose the configuration and price resources to be purchased to form a transaction contract
+My Orders: List and details of all resource orders I have purchased
+My resources: The list of resources corresponding to the current valid order, the client app can establish a connection with the remote resources through the list of resources
+```
+
+| 2. | Hamster Provider | We will create a resource provider server that will have **Initialize configuration**,**Resource details**,**Account information** and **Configuration information** module. |
+```mohaijiang
+
+Q: 您能否列出您将用于每个可交付成果的技术堆栈？ “桌面客户端”、“资源提供服务器”和“Web 应用程序”都非常模糊。
+
+资源提供方将会利用本机的闲置资源，在市场上进行注册，并声明可提供租赁。当提供的虚拟机在市场上达成交易后，资源提供方按照约定，提供相应配额的虚拟机，供远程采购方使用。资源提供方会与使用的客户的建立一条p2p连接，以进行远程管理，如ssh, rdesktop等。
+我们的初步想法是使用libvirt 方案实现虚拟机的管理。(windows使用Hyper-V )
+
+The resource provider will use the idle resources of the machine, register in the market, and declare that it can provide rental. When the provided virtual machine reaches a transaction in the market, the resource provider provides the virtual machine with the corresponding quota for the remote purchaser to use according to the agreement. The resource provider will establish a p2p connection with the used client for remote management, such as ssh, rdesktop, etc.
+Our initial idea is to use the libvirt scheme to implement the management of virtual machines. (Windows uses Hyper-V)
+
+
+Initialize configuration： 初始化配置，包括p2p种子节点的配置，p2p端口配置
+Resource details: 可提供的闲置资源规格（cpu，内存等），以及价格
+账户信息： 提供substrate 账户的导入,提供服务前保证金的质押等，
+Configuration information： 未达成交易的资源随时的下线，资源规格，价格的配置等
+
+Initialize configuration: Initialize configuration, including p2p seed node configuration, p2p port configuration
+Resource details: Available spare resource specifications (cpu, memory, etc.), and price
+Account information: Provide the import of the substrate account, provide the pledge of the deposit before the service, etc.
+Configuration information: resources that have not reached a transaction are offline at any time, resource specifications, price configuration, etc.
+```
 | 3. | Hamster Provider: web app | We will create a web app integrated in the Hamster Provider, to let users easily interact with our Hamster Provider function module. |
+```mohaijiang
+
+Q: 您能否列出您将用于每个可交付成果的技术堆栈？ “桌面客户端”、“资源提供服务器”和“Web 应用程序”都非常模糊。
+
+A: web app 是Provider 的一套网页管理工具，通过这套管理工具，使用者可以自用的共享或停止共享闲置的资源，为自己的闲置资源定价，调整提供的闲置资源规格，修改闲置资源的提供服务的期限等。并且当一笔交易正常终止后，可以通过合约获取想要的报酬。（提供闲置资源服务，需要进行一定的质押，履行交易违约后，会扣除部分的质押金，质押金过低后，其他人将无法在市场上看到这个闲置的共享资源）
+web app is a set of web management tools of Provider. Through this set of management tools, users can share or stop sharing idle resources for their own use, set prices for their own idle resources, adjust the specifications of idle resources provided, and modify the provisioning services of idle resources. period, etc. And when a transaction is terminated normally, the desired compensation can be obtained through the contract. (Providing idle resource services requires a certain pledge. After the transaction is breached, part of the pledge deposit will be deducted. If the pledge deposit is too low, other people will not be able to see this idle shared resource in the market)
+```
 | 4. | Hamster chain | pallet_provider, pallet_resource-order modifications and optimizations due to the need to optimize and adapt already developed pallets when adding features for customers. As code delivery of the underlying framework, there are two integrated pallets |
 | 5. | Whitepaper | Preparation of project white papers |
 
@@ -256,6 +309,12 @@ The following is a list of the features that have been implemented:
 | 0d. | Article | We will write an article or tutorial that explains the work done as part of the grant. |
 | 1. | Evil punishment | Design and implementation of punishment module for evil doing |
 | 2. | Hamster Front end | Front end function addition and optimization to let users easily interact with our Hamster function module. |
+```shell
+Q: 这里的前端交付物到底是什么？您在其他任何地方都没有提到“仓鼠功能”模块。
+A: 我们打算提供一个公开的网页服务，展示当前的市场信息和各统计信息，如最近的达成的交易价格，市场总可以使用的虚拟机数量等等。这个前端服务将基于docker镜像交付
+
+A: We intend to provide a public web service that displays current market information and various statistical information, such as recently concluded transaction prices, the total number of virtual machines available in the market, and so on. This front-end service will be delivered based on the docker image
+```
 | 3. | Hamster chain | We will integrate this chain with the [Treasury](https://github.com/paritytech/substrate/tree/v3.0.0/frame/treasury), [Society](https://github.com/paritytech/substrate/tree/v3.0.0/frame/society), [Democracy](https://github.com/paritytech/substrate/tree/v3.0.0/frame/democracy) and also other essential pallets ,to build a full-featured blockchain. |
 | 4. | Benchmark | Perform unit tests on the individual algorithms to ensure system safety. |
 
